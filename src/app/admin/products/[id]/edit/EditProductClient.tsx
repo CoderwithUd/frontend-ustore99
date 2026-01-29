@@ -11,6 +11,7 @@ import { useGetProductByIdQuery, useUpdateProductMutation } from "@/features/pro
 export function EditProductClient({ id }: { id: string }) {
   const router = useRouter();
   const { data, isLoading, isError, refetch } = useGetProductByIdQuery(id);
+
   const [updateProduct, { isLoading: isSaving }] = useUpdateProductMutation();
 
   async function onSubmit(values: ProductFormValues) {
