@@ -18,7 +18,7 @@ function normalizeApiUrl(baseUrl: string | undefined, url: string) {
 }
 
 const rawBaseQuery = fetchBaseQuery({
-  baseUrl: (process.env.NEXT_PUBLIC_API_BASE_URL || "").replace(/\/$/, ""),
+  baseUrl: ("https://ustore-y3u2.onrender.com/api/" || "").replace(/\/$/, ""),
   prepareHeaders: (headers, { getState }) => {
     const state = getState() as RootState;
     const token = state.auth.token || getAuthTokenCookie();
@@ -32,9 +32,9 @@ export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: async (args, api, extraOptions) => {
     if (typeof args === "string") {
-      return rawBaseQuery(normalizeApiUrl(process.env.NEXT_PUBLIC_API_BASE_URL, args), api, extraOptions);
+      return rawBaseQuery(normalizeApiUrl("https://ustore-y3u2.onrender.com/api/", args), api, extraOptions);
     }
-    const nextArgs: FetchArgs = { ...args, url: normalizeApiUrl(process.env.NEXT_PUBLIC_API_BASE_URL, args.url) };
+    const nextArgs: FetchArgs = { ...args, url: normalizeApiUrl("https://ustore-y3u2.onrender.com/api/", args.url) };
     return rawBaseQuery(nextArgs, api, extraOptions);
   },
   tagTypes: ["Me", "Products"],
