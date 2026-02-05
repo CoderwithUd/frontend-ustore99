@@ -18,12 +18,13 @@ function normalizeApiUrl(baseUrl: string | undefined, url: string) {
 }
 
 const rawBaseQuery = fetchBaseQuery({
-  baseUrl: ("https://ustore-y3u2.onrender.com/api/" || "").replace(/\/$/, ""),
+  baseUrl: "https://ustore-y3u2.onrender.com/api/".replace(/\/$/, ""),
   prepareHeaders: (headers, { getState }) => {
     const state = getState() as RootState;
     const token = state.auth.token || getAuthTokenCookie();
-    if (token) headers.set("authorization", `Bearer ${token}`);
-    headers.set("accept", "application/json");
+    if (token) {
+      headers.set("Authorization", `Bearer ${token}`);
+    }
     return headers;
   }
 });

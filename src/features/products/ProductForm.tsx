@@ -91,12 +91,17 @@ export function ProductForm({
   initial,
   submitLabel,
   isSubmitting,
-  onSubmit
+  onSubmit,
+  secondaryAction
 }: {
   initial?: Partial<Product>;
   submitLabel: string;
   isSubmitting?: boolean;
   onSubmit: (values: ProductFormValues) => void | Promise<void>;
+  secondaryAction?: {
+    label: string;
+    handler: (values: ProductFormValues) => void | Promise<void>;
+  };
 }) {
   const defaults = useMemo(() => productToDefaults(initial), [initial]);
   const form = useForm<ProductFormValues>({
@@ -106,6 +111,17 @@ export function ProductForm({
 
   const variants = useFieldArray({ control: form.control, name: "variants" });
   const images = useFieldArray({ control: form.control, name: "images" });
+
+  async function onSecondaryAction() {
+    if (!secondaryAction) return;
+
+    const isValid = await form.trigger();
+    if (isValid) {
+      await secondaryAction.handler(form.getValues());
+      form.reset(productToDefaults());
+    }
+  }
+
 
   return (
     <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
@@ -275,7 +291,12 @@ export function ProductForm({
         </div>
       </div>
 
-      <div className="flex items-center justify-end">
+      <div className="flex items-center justify-end gap-2">
+        {secondaryAction ? (
+          <Button type="button" variant="secondary" onClick={onSecondaryAction} isLoading={isSubmitting}>
+            {secondaryAction.label}
+          </Button>
+        ) : null}
         <Button type="submit" isLoading={isSubmitting}>
           {submitLabel}
         </Button>

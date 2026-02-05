@@ -11,7 +11,7 @@ export function NewProductClient() {
   const router = useRouter();
   const [createProduct, { isLoading }] = useCreateProductMutation();
 
-  async function onSubmit(values: ProductFormValues) {
+  async function onSubmit(values: ProductFormValues, redirect = true) {
     const tags = (values.tagsText || "")
       .split(",")
       .map((t) => t.trim())
@@ -46,7 +46,9 @@ export function NewProductClient() {
       }).unwrap();
 
       toast.success("Product created");
-      router.replace("/admin/products");
+      if (redirect) {
+        router.replace("/admin/products");
+      }
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Failed to create product");
     }
@@ -61,7 +63,12 @@ export function NewProductClient() {
           <p className="mt-1 text-sm text-slate-600">Create a new product in your catalog.</p>
         </CardHeader>
         <CardContent>
-          <ProductForm submitLabel="Create" isSubmitting={isLoading} onSubmit={onSubmit} />
+          <ProductForm
+            submitLabel="Create"
+            isSubmitting={isLoading}
+            onSubmit={onSubmit}
+            secondaryAction={{ label: "Save and Add Another", handler: (v) => onSubmit(v, false) }}
+          />
         </CardContent>
       </Card>
     </div>
