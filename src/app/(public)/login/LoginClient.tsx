@@ -36,7 +36,6 @@ export function LoginClient() {
     resolver: zodResolver(schema),
     defaultValues: { email: "", password: "", rememberMe: true }
   });
-console.log("Testing login page")
   useEffect(() => {
     form.setFocus("email");
   }, [form]);
